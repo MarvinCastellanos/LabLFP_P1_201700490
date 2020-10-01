@@ -1,16 +1,23 @@
-# This is a sample Python script.
+set=[]
+objetos=[]
 
-# Press Mayús+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+tokenList={
+    "tk_parenA":'(',
+    "tk_parenC":')',
+    "tk_menQ":'<',
+    "tk_mayQ":'>',
+    "tk_corchA":'[',
+    "tk_corchC":']',
+    "tk_igual":'=',
+    "tk_coma":',',
+    "tk_comilla":'"'
+}
 
+letras=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","ñ","o","p","q","r","s","t","u","v","w","x","y","z","-",
+        "A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P","Q","R","S","T","U","V","W","X","Y","Z","_"]
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+numeros=["1","2","3","4","5","6","7","8","9","0"]
 
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+caracter='['
+if caracter== tokenList['tk_corchA']:
+    print(tokenList['tk_corchA'])
