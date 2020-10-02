@@ -1,23 +1,129 @@
 set=[]
 objetos=[]
 
-tokenList={
-    "tk_parenA":'(',
-    "tk_parenC":')',
-    "tk_menQ":'<',
-    "tk_mayQ":'>',
-    "tk_corchA":'[',
-    "tk_corchC":']',
-    "tk_igual":'=',
-    "tk_coma":',',
-    "tk_comilla":'"'
-}
 
 letras=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","ñ","o","p","q","r","s","t","u","v","w","x","y","z","-",
         "A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P","Q","R","S","T","U","V","W","X","Y","Z","_"]
 
-numeros=["1","2","3","4","5","6","7","8","9","0"]
+numeros=["1","2","3","4","5","6","7","8","9","0",".","+","-"]
 
-caracter='['
-if caracter== tokenList['tk_corchA']:
-    print(tokenList['tk_corchA'])
+entrada='''(
+    <
+        [atributo_numerico] = 45.09,
+        [atributo_cadena] = "hola mundo",
+        [atributo_booleano] = true
+    >,
+    <
+        [atributo_numerico] = 4,
+        [atributo_cadena] = "adios mundo",
+        [atributo_booleano] = faLse,
+        [atributo_numericos] = 478
+    >,
+    <
+        [atributo_numerico] = -56.4,
+        [atributo_cadena] = "este es otro ejemplo, las cadenas pueden ser muy largas",
+        [atributo_booleano] = false,
+        [atributo_cadenas] = "hola mundo"
+    >
+)'''
+
+def automataAtrib(texto):
+    estado=0
+    palabraAux=''
+    atributoAux=''
+    diccionario={}
+    contador=0
+
+    for caracter in texto:
+        if caracter=='(' and estado==0:
+            estado=1
+            continue
+    #define objetos
+        if estado==1 and caracter=='<':
+            estado=2
+            continue
+    #define nombre de atributos
+        if estado==2 and caracter=='[':
+            palabraAux = ''
+            atributoAux = ''
+            estado=3
+            continue
+        if estado==3 and not caracter==']':
+            palabraAux+=caracter
+            continue
+        if estado ==3 and caracter==']':
+            estado=4
+            continue
+        if estado==4 and caracter=='=':
+            estado=5
+            continue
+    #define atributos strings
+        if estado==5 and caracter=='"':
+            estado=6
+            continue
+        if estado==6 and not caracter=='"':
+            atributoAux+=caracter
+            continue
+        if estado==6 and caracter=='"':
+            estado=7
+            continue
+        if estado==7 and caracter==',':
+            diccionario[palabraAux]=atributoAux
+            estado=2
+            continue
+        if estado==7 and caracter=='>':
+            diccionario[palabraAux]=atributoAux
+            objetos.append(diccionario)
+            diccionario={}
+            estado=10
+    #define atributos numericos
+        if estado==5:
+            for numero in numeros:
+                if numero == caracter and estado==5:
+                    estado=8
+            for letra in letras:
+                if letra==caracter and estado==5:
+                    estado=9
+                    break
+        if estado==8 and not caracter==',':
+            for numero in numeros:
+                if numero == caracter:
+                    atributoAux+=caracter
+        if estado==8 and caracter==',':
+            diccionario[palabraAux]=atributoAux
+            estado=2
+            continue
+        if estado==8 and caracter=='>':
+            diccionario[palabraAux]=atributoAux
+            objetos.append(diccionario)
+            diccionario = {}
+            estado=10
+    #define atributos booleanos
+        if estado==9 and not caracter==',':
+            for letra in letras:
+                if letra==caracter:
+                    atributoAux+=caracter.lower()
+        if estado==9 and caracter==',':
+            print(palabraAux)
+            diccionario[palabraAux]=atributoAux
+            estado=2
+            continue
+        if estado==9 and caracter=='>':
+            diccionario[palabraAux]=atributoAux
+            objetos.append(diccionario)
+            diccionario = {}
+            estado=10
+            continue
+    #termina objeto
+        if estado==10 and caracter==',':
+            estado=1
+            continue
+    #termina estructura
+        if estado ==10 and caracter==')':
+            estado=0
+            continue
+
+automataAtrib(entrada)
+
+for objeto in objetos:
+    print (objeto)
