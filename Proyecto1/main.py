@@ -1,5 +1,6 @@
 set=[]
 objetos=[]
+comandos=[]
 
 
 letras=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","ñ","o","p","q","r","s","t","u","v","w","x","y","z","-",
@@ -104,7 +105,7 @@ def automataAtrib(texto):
                 if letra==caracter:
                     atributoAux+=caracter.lower()
         if estado==9 and caracter==',':
-            print(palabraAux)
+            #print(palabraAux)
             diccionario[palabraAux]=atributoAux
             estado=2
             continue
@@ -123,7 +124,62 @@ def automataAtrib(texto):
             estado=0
             continue
 
-automataAtrib(entrada)
+entrada='''count *;
+sum edad,promedio,faltas;
+report to reporte3 select * where edad !=44;
+print in blue;
+report tokens;
+select * where marca = "mazda" and año < 1996;
+load into elementos files periodica.aon,periodica2.aon;
+'''
+def sqli(texto):
+    palComandoAux=''
+    comando=[]
+    for caracter in texto:
+        for letra in letras:
+            if letra==caracter:
+                palComandoAux+=caracter
+                break
+        for numero in numeros:
+            if numero==caracter:
+                palComandoAux+=caracter
+                break
+        if caracter=='*' or caracter=='=' or caracter=='!' or caracter=='>' or caracter =='<':
+            palComandoAux+=caracter
+        if caracter==',' or caracter==' ' or caracter=='=' or caracter==';':
+            if not palComandoAux=='':
+                comando.append(palComandoAux)
+                palComandoAux=''
+        if caracter==';':
+            comandos.append(comando)
+            comando=[]
 
-for objeto in objetos:
-    print (objeto)
+def instruccion(texto):
+    palComandoAux = ''
+    comando = []
+    for caracter in texto:
+        for letra in letras:
+            if letra == caracter:
+                palComandoAux += caracter
+                break
+        for numero in numeros:
+            if numero == caracter:
+                palComandoAux += caracter
+                break
+
+        if caracter==',' or caracter==' ' or caracter=='=' or caracter==';' or caracter=='<' or caracter=='>':
+            if not palComandoAux=='':
+                comando.append(palComandoAux)
+                palComandoAux=''
+        if caracter=='*' or caracter=='=' or caracter=='!' or caracter=='>' or caracter =='<':
+            palComandoAux+=caracter
+    print (comando)
+
+
+def principal():
+    print('Bienvenido, ingrese su comando: ')
+    texto=input()
+    instruccion(texto)
+
+
+principal()
