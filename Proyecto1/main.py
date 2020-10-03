@@ -1,6 +1,6 @@
-set=[]
-objetos=[]
+set={}
 comandos=[]
+palabraUsada=''
 
 
 letras=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","ñ","o","p","q","r","s","t","u","v","w","x","y","z","-",
@@ -34,9 +34,11 @@ def automataAtrib(texto):
     atributoAux=''
     diccionario={}
     contador=0
+    objetos=[]
 
     for caracter in texto:
         if caracter=='(' and estado==0:
+            objetos=[]
             estado=1
             continue
     #define objetos
@@ -105,7 +107,6 @@ def automataAtrib(texto):
                 if letra==caracter:
                     atributoAux+=caracter.lower()
         if estado==9 and caracter==',':
-            #print(palabraAux)
             diccionario[palabraAux]=atributoAux
             estado=2
             continue
@@ -121,6 +122,7 @@ def automataAtrib(texto):
             continue
     #termina estructura
         if estado ==10 and caracter==')':
+            set[setID]=objetos
             estado=0
             continue
 
@@ -153,10 +155,13 @@ def sqli(texto):
         if caracter==';':
             comandos.append(comando)
             comando=[]
+
 com=[]
 def instruccion(texto):
+
     palComandoAux = ''
     global com
+    com=[]
     for caracter in texto:
         for letra in letras:
             if letra == caracter:
@@ -173,16 +178,65 @@ def instruccion(texto):
                 palComandoAux=''
         if caracter=='*' or caracter=='=' or caracter=='!' or caracter=='>' or caracter =='<':
             palComandoAux+=caracter
-    print (com)
 
 
 def principal():
-    print('Bienvenido, ingrese su comando: ')
-    texto=input()
-    #instruccion(texto)
+    texto=''
+    while True:
+        print('Bienvenido, ingrese su comando: ')
+        texto=input()
+        instruccion(texto)
+        verificaComando(com)
+        texto=''
 
-sqli(entrada)
-
-for comando in comandos:
-    print (comando)
-#principal()
+setID=''
+def verificaComando(vector):
+    global set
+    global setID
+    global palabraUsada
+    estado=0
+    for palabra in vector:
+#create set
+        if palabra.lower()=='create' and estado==0:
+            estado=1
+            continue
+        if estado==1 and palabra.lower()=='set':
+            estado=2
+            continue
+        if estado==2:
+            set[palabra]=''
+            print('Se ha creado el ID ',palabra)
+            estado=0
+            continue
+#load into
+        if estado==0 and palabra.lower()=='load':
+            estado=3
+            continue
+        if estado==3 and palabra.lower()=='into':
+            estado=4
+            continue
+        if estado==4:
+            setID=palabra
+            estado=5
+            continue
+        if estado==5:
+            automataAtrib(palabra)
+            continue
+#use set
+        if estado==0 and palabra.lower()=='use':
+            estado=6
+            continue
+        if estado==6 and palabra.lower()=='set':
+            estado=7
+            continue
+        if estado==7:
+            if palabra in set:
+                palabraUsada=palabra
+                estado=0
+                print('Ahora esta utilizando el ID '+palabraUsada)
+                continue
+            else:
+                print('El ID '+ palabra+' no se encuentra registrado')
+                estado=0
+                continue
+principal()
