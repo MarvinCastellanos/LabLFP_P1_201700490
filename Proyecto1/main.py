@@ -126,10 +126,10 @@ def automataAtrib(texto):
 
 entrada='''count *;
 sum edad,promedio,faltas;
-report to reporte3 select * where edad !=44;
+report to reporte3 select * where edad != 44;
 print in blue;
 report tokens;
-select * where marca = "mazda" and año < 1996;
+select * where marca = "mazda" and año >= 1996;
 load into elementos files periodica.aon,periodica2.aon;
 '''
 def sqli(texto):
@@ -153,10 +153,10 @@ def sqli(texto):
         if caracter==';':
             comandos.append(comando)
             comando=[]
-
+com=[]
 def instruccion(texto):
     palComandoAux = ''
-    comando = []
+    global com
     for caracter in texto:
         for letra in letras:
             if letra == caracter:
@@ -169,17 +169,20 @@ def instruccion(texto):
 
         if caracter==',' or caracter==' ' or caracter=='=' or caracter==';' or caracter=='<' or caracter=='>':
             if not palComandoAux=='':
-                comando.append(palComandoAux)
+                com.append(palComandoAux)
                 palComandoAux=''
         if caracter=='*' or caracter=='=' or caracter=='!' or caracter=='>' or caracter =='<':
             palComandoAux+=caracter
-    print (comando)
+    print (com)
 
 
 def principal():
     print('Bienvenido, ingrese su comando: ')
     texto=input()
-    instruccion(texto)
+    #instruccion(texto)
 
+sqli(entrada)
 
-principal()
+for comando in comandos:
+    print (comando)
+#principal()
