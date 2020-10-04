@@ -197,7 +197,6 @@ def principal():
         instruccion(texto)
         verificaComando(com)
         texto=''
-        print (set)
 
 setID=''
 #verifica comando ingresado y lo procesa
@@ -251,4 +250,11 @@ def verificaComando(vector):
                 print('El ID '+ palabra+' no se encuentra registrado')
                 estado=0
                 continue
+#list atributes
+        if estado==0 and palabra.lower()=='list':
+            estado=8
+            continue
+        if estado==8 and palabra.lower()=='atributes':
+            for atrib in set[palabraUsada][0][0]:
+                print(atrib)
 principal()
