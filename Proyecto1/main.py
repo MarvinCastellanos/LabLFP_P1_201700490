@@ -298,5 +298,19 @@ def verificaComando(vector):
             for sum in set[palabraUsada]:
                 suma+=float(sum[palabra])
             print(suma)
+            estado=0
+            continue
+#count
+        if estado==0 and palabra=='count':
+            estado=12
+            continue
+        if estado==12:
+            conteo=0
+            for cont in set[palabraUsada]:
+                if not cont[palabra]=='null':
+                    conteo+=1
+            print(conteo)
+            estado=0
+            continue
 
 principal()
