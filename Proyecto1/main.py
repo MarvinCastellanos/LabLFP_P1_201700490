@@ -28,7 +28,9 @@ entrada='''(
     >
 )'''
 
+#obtiene atibutos cargados y los ingresa a memoria
 def automataAtrib(texto):
+
     estado=0
     palabraAux=''
     atributoAux=''
@@ -36,7 +38,10 @@ def automataAtrib(texto):
     contador=0
     objetos=[]
 
-    for caracter in texto:
+    file=open(texto, "r")
+    entrada=file.read()
+
+    for caracter in entrada:
         if caracter=='(' and estado==0:
             objetos=[]
             estado=1
@@ -122,9 +127,10 @@ def automataAtrib(texto):
             continue
     #termina estructura
         if estado ==10 and caracter==')':
-            set[setID]=objetos
+            set[setID].append(objetos)
             estado=0
             continue
+    file.close()
 
 entrada='''count *;
 sum edad,promedio,faltas;
@@ -134,6 +140,8 @@ report tokens;
 select * where marca = "mazda" and año >= 1996;
 load into elementos files periodica.aon,periodica2.aon;
 '''
+
+#separa las palabras de archivo sqli
 def sqli(texto):
     palComandoAux=''
     comando=[]
@@ -157,6 +165,7 @@ def sqli(texto):
             comando=[]
 
 com=[]
+#separa las palabras del comando ingresado y las ingresa en un vector
 def instruccion(texto):
 
     palComandoAux = ''
@@ -179,7 +188,7 @@ def instruccion(texto):
         if caracter=='*' or caracter=='=' or caracter=='!' or caracter=='>' or caracter =='<':
             palComandoAux+=caracter
 
-
+#contiene las funciones principales del programa
 def principal():
     texto=''
     while True:
@@ -188,8 +197,10 @@ def principal():
         instruccion(texto)
         verificaComando(com)
         texto=''
+        print (set)
 
 setID=''
+#verifica comando ingresado y lo procesa
 def verificaComando(vector):
     global set
     global setID
@@ -204,7 +215,7 @@ def verificaComando(vector):
             estado=2
             continue
         if estado==2:
-            set[palabra]=''
+            set[palabra]=[]
             print('Se ha creado el ID ',palabra)
             estado=0
             continue
@@ -221,6 +232,7 @@ def verificaComando(vector):
             continue
         if estado==5:
             automataAtrib(palabra)
+            print('Se ha cargado '+palabra+' en '+setID)
             continue
 #use set
         if estado==0 and palabra.lower()=='use':
