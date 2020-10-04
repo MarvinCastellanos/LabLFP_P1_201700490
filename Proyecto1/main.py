@@ -81,7 +81,8 @@ def automataAtrib(texto):
             continue
         if estado==7 and caracter=='>':
             diccionario[palabraAux]=atributoAux
-            objetos.append(diccionario)
+            set[setID].append(diccionario)
+            #objetos.append(diccionario)
             diccionario={}
             estado=10
     #define atributos numericos
@@ -103,7 +104,8 @@ def automataAtrib(texto):
             continue
         if estado==8 and caracter=='>':
             diccionario[palabraAux]=atributoAux
-            objetos.append(diccionario)
+            set[setID].append(diccionario)
+            #objetos.append(diccionario)
             diccionario = {}
             estado=10
     #define atributos booleanos
@@ -117,7 +119,8 @@ def automataAtrib(texto):
             continue
         if estado==9 and caracter=='>':
             diccionario[palabraAux]=atributoAux
-            objetos.append(diccionario)
+            set[setID].append(diccionario)
+            #objetos.append(diccionario)
             diccionario = {}
             estado=10
             continue
@@ -127,7 +130,9 @@ def automataAtrib(texto):
             continue
     #termina estructura
         if estado ==10 and caracter==')':
-            set[setID].append(objetos)
+            #objetosAux=[]
+            #objetosAux=set[setID]
+            #objetosAux.append(objetos)
             estado=0
             continue
     file.close()
@@ -197,6 +202,7 @@ def principal():
         instruccion(texto)
         verificaComando(com)
         texto=''
+        #print(set)
 
 setID=''
 #verifica comando ingresado y lo procesa
@@ -255,6 +261,42 @@ def verificaComando(vector):
             estado=8
             continue
         if estado==8 and palabra.lower()=='atributes':
-            for atrib in set[palabraUsada][0][0]:
+            for atrib in set[palabraUsada][0]:
                 print(atrib)
+            estado=0
+            continue
+#max
+        if estado==0 and palabra.lower()=='max':
+            estado=9
+            continue
+        if estado==9:
+            maximo=-5000000.0
+            for max in set[palabraUsada]:
+                if float(max[palabra]) >= maximo:
+                    maximo=float(max[palabra])
+            print (maximo)
+            estado=0
+            continue
+#min
+        if estado==0 and palabra.lower()=='min':
+            estado=10
+            continue
+        if estado==10:
+            minimo=50000000.0
+            for min in set[palabraUsada]:
+                if float(min[palabra]) <= minimo:
+                    minimo=float(min[palabra])
+            print (minimo)
+            estado=0
+            continue
+#sum
+        if estado==0 and palabra=='sum':
+            estado=11
+            continue
+        if estado==11:
+            suma=0.0
+            for sum in set[palabraUsada]:
+                suma+=float(sum[palabra])
+            print(suma)
+
 principal()
