@@ -98,6 +98,7 @@ def automataAtrib(texto):
             for numero in numeros:
                 if numero == caracter:
                     atributoAux+=caracter
+                    continue
         if estado==8 and caracter==',':
             diccionario[palabraAux]=atributoAux
             estado=2
@@ -181,9 +182,11 @@ def instruccion(texto):
             if letra == caracter:
                 palComandoAux += caracter
                 break
-        for numero in numeros:
-            if numero == caracter:
+        for num in numeros:
+            print(palComandoAux)
+            if num == caracter:
                 palComandoAux += caracter
+                #print(palComandoAux)
                 break
 
         if caracter==',' or caracter==' ' or caracter=='=' or caracter==';' or caracter=='<' or caracter=='>':
@@ -192,6 +195,7 @@ def instruccion(texto):
                 palComandoAux=''
         if caracter=='*' or caracter=='=' or caracter=='!' or caracter=='>' or caracter =='<':
             palComandoAux+=caracter
+        continue
 
 #contiene las funciones principales del programa
 def principal():
@@ -200,7 +204,8 @@ def principal():
         print('Bienvenido, ingrese su comando: ')
         texto=input()
         instruccion(texto)
-        verificaComando(com)
+        print(com)
+        #verificaComando(com)
         texto=''
         #print(set)
 
@@ -261,6 +266,7 @@ def verificaComando(vector):
             estado=8
             continue
         if estado==8 and palabra.lower()=='atributes':
+            print(palabraUsada+':')
             for atrib in set[palabraUsada][0]:
                 print(atrib)
             estado=0
@@ -271,6 +277,7 @@ def verificaComando(vector):
             continue
         if estado==9:
             maximo=-5000000.0
+            print(palabraUsada+', '+palabra+':')
             for max in set[palabraUsada]:
                 if float(max[palabra]) >= maximo:
                     maximo=float(max[palabra])
@@ -283,6 +290,7 @@ def verificaComando(vector):
             continue
         if estado==10:
             minimo=50000000.0
+            print(palabraUsada + ', ' + palabra + ':')
             for min in set[palabraUsada]:
                 if float(min[palabra]) <= minimo:
                     minimo=float(min[palabra])
@@ -290,27 +298,62 @@ def verificaComando(vector):
             estado=0
             continue
 #sum
-        if estado==0 and palabra=='sum':
+        if estado==0 and palabra.lower()=='sum':
             estado=11
             continue
         if estado==11:
             suma=0.0
+            print(palabraUsada + ', ' + palabra + ':')
             for sum in set[palabraUsada]:
                 suma+=float(sum[palabra])
             print(suma)
-            estado=0
             continue
 #count
-        if estado==0 and palabra=='count':
+        if estado==0 and palabra.lower()=='count':
             estado=12
             continue
         if estado==12:
             conteo=0
+            print(palabraUsada + ', ' + palabra + ':')
             for cont in set[palabraUsada]:
                 if not cont[palabra]=='null':
                     conteo+=1
             print(conteo)
-            estado=0
+            continue
+#select
+        if estado==0 and palabra.lower()=='select':
+            estado=13
+            continue
+        if estado==13 and palabra=='*' and len(vector)==2:
+            print(palabraUsada+':\n<<<<<<<<<<<<<<<<<<<<<<')
+            for atributos in set[palabraUsada]:
+                for atributo in atributos:
+                    print(atributo+':'+atributos[atributo])
+                print('-----------------------')
+            continue
+        if estado==13 and palabra=='*':
+            estado=14
+            continue
+        if estado==14 and palabra.lower()=='where':
+            estado=15
+            continue
+        if estado==15:
+            selecAtrib=''
+            selecAtrib=palabra
+            estado=16
+            continue
+        if estado==16 and palabra=='=':
+            estado=17
+            continue
+        if estado==17:
+            selecAtribVal=''
+            selecAtribVal=palabra
+            print(palabraUsada+':\n<<<<<<<<<<<<<<<<<<<<<')
+            for atrib in set[palabraUsada]:
+                if atrib[selecAtrib]==selecAtribVal:
+                    for pal in atrib:
+                        print(pal+': '+atrib[pal])
+                    print('------------------------')
             continue
 
 principal()
