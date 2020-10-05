@@ -4,7 +4,8 @@ palabraUsada=''
 
 
 letras=["a","b","c","d","e","f","g","h","i","j","k","l","m","n","ñ","o","p","q","r","s","t","u","v","w","x","y","z","-",
-        "A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P","Q","R","S","T","U","V","W","X","Y","Z","_"]
+        "A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P","Q","R","S","T","U","V","W","X","Y","Z","_",
+        "/",":","\\"]
 
 numeros=["1","2","3","4","5","6","7","8","9","0",".","+","-"]
 
@@ -183,7 +184,7 @@ def instruccion(texto):
                 palComandoAux += caracter
                 break
         for num in numeros:
-            print(palComandoAux)
+            #print(palComandoAux)
             if num == caracter:
                 palComandoAux += caracter
                 #print(palComandoAux)
@@ -204,8 +205,8 @@ def principal():
         print('Bienvenido, ingrese su comando: ')
         texto=input()
         instruccion(texto)
-        print(com)
-        #verificaComando(com)
+        #print(com)
+        verificaComando(com)
         texto=''
         #print(set)
 
@@ -355,5 +356,18 @@ def verificaComando(vector):
                         print(pal+': '+atrib[pal])
                     print('------------------------')
             continue
+#script
+        if estado==0 and palabra.lower()=='script':
+            estado=18
+            continue
+        if estado==18:
+            file = open(palabra, "r")
+            entrada = file.read()
+            #print (entrada)
+            sqli(entrada)
+            for comando in comandos:
+                verificaComando(comando)
+                print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+            file.close()
 
 principal()
