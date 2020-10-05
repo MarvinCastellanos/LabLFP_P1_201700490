@@ -167,9 +167,31 @@ def sqli(texto):
             if numero==caracter:
                 palComandoAux+=caracter
                 break
+        if caracter == '*':
+            tokensEncontrados.append(['tk_aste', caracter])
+        elif caracter == '=':
+            tokensEncontrados.append(['tk_igual', caracter])
+        elif caracter == '!':
+            tokensEncontrados.append(['tk_distinto', caracter])
+        elif caracter == '>':
+            tokensEncontrados.append(['tk_mayorQ', caracter])
+        elif caracter == '<':
+            tokensEncontrados.append(['tk_menorQ', caracter])
+        elif caracter == ',':
+            tokensEncontrados.append(['tk_coma', caracter])
+        elif caracter == ';':
+            tokensEncontrados.append(['tk_puntoComa', caracter])
+        elif caracter=='"':
+            tokensEncontrados.append(['tk_comDobl',caracter])
+
         if caracter == '*' or caracter == '=' or caracter=='!' or caracter == '>' or caracter == '<':
             palComandoAux += caracter
         if caracter == ',' or caracter == ' ' or caracter == '=' or caracter == ';':
+
+            if not(caracter == '*' and caracter == '=' and caracter == '!' and caracter == '>' and caracter == '<' and
+            caracter == ',' and caracter == ';' and caracter=='"'):
+                tokensEncontrados.append(['tk_palabra',palComandoAux])
+
             if not palComandoAux == '':
                 comando.append(palComandoAux)
                 palComandoAux = ''
@@ -315,7 +337,7 @@ def verificaComando(vector):
             print(colored(palabraUsada + ', ' + palabra + ':',color))
             for sum in set[palabraUsada]:
                 suma+=float(sum[palabra])
-            print(colored(suma),color)
+            print(colored(suma,color))
             continue
 #count
         if estado==0 and palabra.lower()=='count':
@@ -386,5 +408,12 @@ def verificaComando(vector):
             continue
         if estado==20:
             color=palabra
+#report tokens
+        if estado==0 and palabra.lower()=='report':
+            estado=21
+            continue
+        if estado==21 and palabra.lower()=='tokens':
+            for token in tokensEncontrados:
+                print(colored(token[0]+' -> '+token[1]))
 
 principal()
