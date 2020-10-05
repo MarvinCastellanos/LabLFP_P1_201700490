@@ -1,0 +1,17 @@
+(
+    <
+        [peso] = 145.88,
+        [nombre] = "Laura",
+        [activo] = true
+    >,
+    <
+        [peso] = 404,
+        [nombre] = "Felipe",
+        [activo] = false
+    >,
+    <
+        [peso] = 188,
+        [nombre] = "Ruperta",
+        [activo] = false
+    >
+)

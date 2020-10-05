@@ -1,0 +1,16 @@
+create set persona;
+load into persona ejemplo.aon,ejemplo2.aon;
+use set persona;
+select *;
+sum peso,peso;
+count nombre;
+count peso,nombre;
+max peso;
+min peso;
+list atributes;
+select * where nombre = "Felipe";
+select * where peso = -144;
+report tokens;
+select nombre,peso where nombre = "Felipe" or peso = 404;
+select nombre,peso where nombre = "Felipe" and peso = 404;
+select nombre,peso where nombre = "Felipe" xor peso = 404;
