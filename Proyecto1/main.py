@@ -246,7 +246,10 @@ def verificaComando(vector):
     global setID
     global palabraUsada
     global color
+    comparacion=[]
+    atributos=[]
     estado=0
+    contador=0
     for palabra in vector:
 #create set
         if palabra.lower()=='create' and estado==0:
@@ -352,7 +355,9 @@ def verificaComando(vector):
             print(colored(conteo,color))
             continue
 #select
+ #*
         if estado==0 and palabra.lower()=='select':
+            contador+=1
             estado=13
             continue
         if estado==13 and palabra=='*' and len(vector)==2:
@@ -376,16 +381,245 @@ def verificaComando(vector):
         if estado==16 and palabra=='=':
             estado=17
             continue
-        if estado==17:
+        if estado==17 and len(vector)==6:
             selecAtribVal=''
             selecAtribVal=palabra
-            print(colored(palabraUsada+':\n<<<<<<<<<<<<<<<<<<<<<',color))
             for atrib in set[palabraUsada]:
                 if atrib[selecAtrib]==selecAtribVal:
+                    print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<', color))
                     for pal in atrib:
                         print(colored(pal+': '+atrib[pal],color))
                     print(colored('------------------------',color))
             continue
+        elif estado==17:
+            comparacion.append(selecAtrib)
+            comparacion.append(palabra)
+
+            estado=25
+            continue
+    #OR
+        if estado==25 and palabra.lower()=='or':
+            #print(comparacion)
+            estado=22
+            continue
+        if estado==22:
+            #print(estado)
+            selecAtrib = ''
+            selecAtrib = palabra
+            estado = 23
+            continue
+        if estado==23 and palabra=='=':
+            #print(estado)
+            estado=24
+            continue
+        if estado==24:
+            #print(estado)
+            selecAtribVal = ''
+            selecAtribVal = palabra
+            for atrib in set[palabraUsada]:
+                #print (comparacion)
+                if selecAtribVal == atrib[selecAtrib] or comparacion[1]==atrib[comparacion[0]] :
+                    print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<', color))
+                    for pal in atrib:
+                        print(colored(pal + ': ' + atrib[pal], color))
+                    print(colored('------------------------', color))
+            continue
+    #AND
+        if estado==25 and palabra.lower()=='and':
+            #print(comparacion)
+            estado=26
+            continue
+        if estado==26:
+            #print(estado)
+            selecAtrib = ''
+            selecAtrib = palabra
+            estado = 27
+            continue
+        if estado==27 and palabra=='=':
+            #print(estado)
+            estado=28
+            continue
+        if estado==28:
+            #print(estado)
+            selecAtribVal = ''
+            selecAtribVal = palabra
+            for atrib in set[palabraUsada]:
+                #print (comparacion)
+                if selecAtribVal == atrib[selecAtrib] and comparacion[1]==atrib[comparacion[0]] :
+                    print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<', color))
+                    for pal in atrib:
+                        print(colored(pal + ': ' + atrib[pal], color))
+                    print(colored('------------------------', color))
+            continue
+    #XOR
+        if estado==25 and palabra.lower()=='xor':
+            #print(comparacion)
+            estado=29
+            continue
+        if estado==29:
+            #print(estado)
+            selecAtrib = ''
+            selecAtrib = palabra
+            estado = 30
+            continue
+        if estado==30 and palabra=='=':
+            #print(estado)
+            estado=31
+            continue
+        if estado==31:
+            #print(estado)
+            selecAtribVal = ''
+            selecAtribVal = palabra
+            for atrib in set[palabraUsada]:
+                #print (comparacion)
+                if selecAtribVal == atrib[selecAtrib] and ( comparacion[1]==atrib[comparacion[0]])==False :
+                    print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<', color))
+                    for pal in atrib:
+                        print(colored(pal + ': ' + atrib[pal], color))
+                    print(colored('------------------------', color))
+                elif comparacion[1]==atrib[comparacion[0]] and ( selecAtribVal == atrib[selecAtrib])==False :
+                    print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<', color))
+                    for pal in atrib:
+                        print(colored(pal + ': ' + atrib[pal], color))
+                    print(colored('------------------------', color))
+
+            continue
+
+ #atributos
+        if estado==13 and not palabra=='*':
+            estado=32
+        if estado==32 and contador <= len(vector) and not palabra=='where':
+            contador+=1
+            atributos.append(palabra)
+            if contador==len(vector):
+                estado=33
+        if estado==33 and not 'where' in vector:
+            print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<<', color))
+            for atribs in set[palabraUsada]:
+                for atributo in atribs:
+                    for atribCon in atributos:
+                        print(atribCon + ':' + atribs[atribCon])
+                    break
+                print(colored('-----------------------',color))
+            continue
+        if estado==32 and palabra.lower()=='where':
+            #print (estado)
+            estado=35
+            continue
+        if estado==35:
+            selecAtrib=''
+            selecAtrib=palabra
+            estado=36
+            continue
+        if estado==36 and palabra=='=':
+            estado=37
+            #print(estado)
+            continue
+        if estado==37 and not ('or' in vector) and not ('and' in vector) and not ('xor' in vector):
+            #print('bandera')
+            selecAtribVal=''
+            selecAtribVal=palabra
+            for atrib in set[palabraUsada]:
+                if atrib[selecAtrib]==selecAtribVal:
+                    print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<', color))
+                    for atribCon in atributos:
+                        print(colored(atribCon + ': ' + atrib[atribCon], color))
+                    print(colored('------------------------',color))
+            continue
+        elif estado==37:
+            comparacion.append(selecAtrib)
+            comparacion.append(palabra)
+
+            estado=38
+            continue
+    #OR
+        if estado==38 and palabra.lower()=='or':
+            #print(comparacion)
+            estado=39
+            continue
+        if estado==39:
+            #print(estado)
+            selecAtrib = ''
+            selecAtrib = palabra
+            estado = 40
+            continue
+        if estado==40 and palabra=='=':
+            #print(estado)
+            estado=41
+            continue
+        if estado==41:
+            #print(estado)
+            selecAtribVal = ''
+            selecAtribVal = palabra
+            for atrib in set[palabraUsada]:
+                #print (comparacion)
+                if selecAtribVal == atrib[selecAtrib] or comparacion[1]==atrib[comparacion[0]] :
+                    print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<', color))
+                    for atribCon in atributos:
+                        print(colored(atribCon + ': ' + atrib[atribCon], color))
+                    print(colored('------------------------', color))
+            continue
+    #AND
+        if estado==38 and palabra.lower()=='and':
+            #print(comparacion)
+            estado=42
+            continue
+        if estado==42:
+            #print(estado)
+            selecAtrib = ''
+            selecAtrib = palabra
+            estado = 43
+            continue
+        if estado==43 and palabra=='=':
+            #print(estado)
+            estado=44
+            continue
+        if estado==44:
+            #print(estado)
+            selecAtribVal = ''
+            selecAtribVal = palabra
+            for atrib in set[palabraUsada]:
+                #print (comparacion)
+                if selecAtribVal == atrib[selecAtrib] and comparacion[1]==atrib[comparacion[0]] :
+                    print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<', color))
+                    for atribCon in atributos:
+                        print(colored(atribCon + ': ' + atrib[atribCon], color))
+                    print(colored('------------------------', color))
+            continue
+    #XOR
+        if estado==38 and palabra.lower()=='xor':
+            #print(comparacion)
+            estado=45
+            continue
+        if estado==45:
+            #print(estado)
+            selecAtrib = ''
+            selecAtrib = palabra
+            estado = 46
+            continue
+        if estado==46 and palabra=='=':
+            #print(estado)
+            estado=47
+            continue
+        if estado==47:
+            #print(estado)
+            selecAtribVal = ''
+            selecAtribVal = palabra
+            for atrib in set[palabraUsada]:
+                #print (comparacion)
+                if selecAtribVal == atrib[selecAtrib] and ( comparacion[1]==atrib[comparacion[0]])==False :
+                    print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<', color))
+                    for atribCon in atributos:
+                        print(colored(atribCon + ': ' + atrib[atribCon], color))
+                    print(colored('------------------------', color))
+                elif comparacion[1]==atrib[comparacion[0]] and ( selecAtribVal == atrib[selecAtrib])==False :
+                    print(colored(palabraUsada + ':\n<<<<<<<<<<<<<<<<<<<<<', color))
+                    for atribCon in atributos:
+                        print(colored(atribCon + ': ' + atrib[atribCon], color))
+                    print(colored('------------------------', color))
+
+            continue
+
 #script
         if estado==0 and palabra.lower()=='script':
             estado=18
@@ -393,7 +627,7 @@ def verificaComando(vector):
         if estado==18:
             file = open(palabra, "r")
             entrada = file.read()
-            #print (entrada)
+            #print (file)
             sqli(entrada)
             for comando in comandos:
                 verificaComando(comando)
